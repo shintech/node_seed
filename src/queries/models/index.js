@@ -56,5 +56,30 @@ export default function getAllRoutes (options) {
     })
   }
 
+  queries.updateSingleModel = (req, res, id) => {
+    const modelID = parseInt(id)
+
+    let body = ''
+
+    req.on('data', function (data) {
+      body += data
+    })
+
+    req.on('end', function () {
+      db.none('update models set name=$1, attribute=$2 where id=$3', [body.name, body.attribute, modelID])
+      .then(function (done) {
+        res.setHeader('Content-Type', 'application/json')
+        res.write(JSON.stringify({
+          status: 'success',
+          message: 'Updated one model...'
+        }))
+        res.end()
+      })
+      .catch(function (err) {
+        return err
+      })
+    })
+  }
+
   return queries
 }

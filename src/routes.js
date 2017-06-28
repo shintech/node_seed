@@ -15,4 +15,8 @@ export default function getRouter (request, response, options) {
   if (request.method === 'POST' && parsedURL.pathname === '/models') {
     models(options).createModel(request, response)
   }
+
+  if (request.method === 'PUT' && parsedURL.pathname === '/models' && parsedURL.query.id) {
+    models(options).updateSingleModel(request, response, parsedURL.query.id)
+  }
 }
