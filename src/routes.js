@@ -19,4 +19,8 @@ export default function getRouter (request, response, options) {
   if (request.method === 'PUT' && parsedURL.pathname === '/models' && parsedURL.query.id) {
     models(options).updateSingleModel(request, response, parsedURL.query.id)
   }
+
+  if (request.method === 'DELETE' && parsedURL.pathname === '/models' && parsedURL.query.id) {
+    models(options).removeModel(request, response, parsedURL.query.id)
+  }
 }

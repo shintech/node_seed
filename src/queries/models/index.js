@@ -81,5 +81,22 @@ export default function getAllRoutes (options) {
     })
   }
 
+  queries.removeModel = (req, res, id) => {
+    var modelID = parseInt(id)
+
+    db.result('delete from models where id = $1', modelID)
+    .then(function (data) {
+      res.setHeader('Content-Type', 'application/json')
+      res.write(JSON.stringify({
+        status: 'success',
+        message: `Removed ${data.rowCount} model`
+      }))
+      res.end()
+    })
+    .catch(function (err) {
+      return err
+    })
+  }
+
   return queries
 }
