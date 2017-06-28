@@ -2,21 +2,34 @@ import http from 'http'
 import fs from 'fs'
 import path from 'path'
 import mime from 'mime'
+import routes from './routes'
+import init from 'shintech-init-db'
+import winston from 'winston'
+import config from './_config'
 
 var cache = {}
-const port = process.env['PORT']
+
+const options = {
+  port: process.env.PORT || 8000,
+  environment: process.env.NODE_ENV || 'development',
+  logger: winston,
+  config: config
+}
+
+options.db = init(options)
+
+const { port } = options
 
 const server = http.createServer(function (request, response) {
   var filePath = false
-
   if (request.url === '/') {
     filePath = 'public/index.html'
-  } else {
-    filePath = 'public' + request.url
-  }
 
-  var absPath = './' + filePath
-  serveStatic(response, cache, absPath)
+    var absPath = './' + filePath
+    serveStatic(response, cache, absPath)
+  } else {
+    routes(request, response, options)
+  }
 })
 
 server.on('request', function (request, response) {
