@@ -15,5 +15,18 @@ export default function getAllRoutes (options) {
     })
   }
 
+  queries.getSingleModel = (req, res, id) => {
+    const modelID = parseInt(id)
+    db.one('select * from models where id = $1', modelID)
+    .then(function (data) {
+      res.setHeader('Content-Type', 'application/json')
+      res.write(JSON.stringify(data))
+      res.end()
+    })
+    .catch(function (err) {
+      return err
+    })
+  }
+
   return queries
 }
